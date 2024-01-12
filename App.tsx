@@ -38,7 +38,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-
+import NavigationContainerComp from './src/navigation/navigationContainer';
 type SectionProps = PropsWithChildren<{
   title: string;
 }>;
@@ -159,142 +159,143 @@ function App(): JSX.Element {
   }
 
   return (
-    <View style={styles.container}>
-      {showCamera ? (
-        <>
-          <Camera
-            ref={camera}
-            style={StyleSheet.absoluteFill}
-            device={device}
-            format={format}
-            isActive={showCamera}
-            photo={true}
-            // frameProcessor={frameProcessor}
-            codeScanner={codeScanner}
-            exposure={0}
-          />
+    <NavigationContainerComp />
+    // <View style={styles.container}>
+    //   {showCamera ? (
+    //     <>
+    //       <Camera
+    //         ref={camera}
+    //         style={StyleSheet.absoluteFill}
+    //         device={device}
+    //         format={format}
+    //         isActive={showCamera}
+    //         photo={true}
+    //         // frameProcessor={frameProcessor}
+    //         codeScanner={codeScanner}
+    //         exposure={0}
+    //       />
 
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              onPress={() =>
-                cameraType === 'back'
-                  ? setCameraType('front')
-                  : setCameraType('back')
-              }>
-              <Text
-                style={{
-                  backgroundColor: '#FFFFFF',
-                  marginRight: 20,
-                  padding: 10,
-                }}>
-                Switch
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.camButton}
-              onPress={() => capturePhoto()}
-            />
-          </View>
-        </>
-      ) : (
-        <>
-          {imageSource !== '' ? (
-            <Image
-              style={styles.image}
-              source={{
-                uri: `file://'${imageSource}`,
-              }}
-            />
-          ) : null}
+    //       <View style={styles.buttonContainer}>
+    //         <TouchableOpacity
+    //           onPress={() =>
+    //             cameraType === 'back'
+    //               ? setCameraType('front')
+    //               : setCameraType('back')
+    //           }>
+    //           <Text
+    //             style={{
+    //               backgroundColor: '#FFFFFF',
+    //               marginRight: 20,
+    //               padding: 10,
+    //             }}>
+    //             Switch
+    //           </Text>
+    //         </TouchableOpacity>
+    //         <TouchableOpacity
+    //           style={styles.camButton}
+    //           onPress={() => capturePhoto()}
+    //         />
+    //       </View>
+    //     </>
+    //   ) : (
+    //     <>
+    //       {imageSource !== '' ? (
+    //         <Image
+    //           style={styles.image}
+    //           source={{
+    //             uri: `file://'${imageSource}`,
+    //           }}
+    //         />
+    //       ) : null}
 
-          <View style={styles.backButton}>
-            <TouchableOpacity
-              style={{
-                backgroundColor: 'rgba(0,0,0,0.2)',
-                padding: 10,
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: 10,
-                borderWidth: 2,
-                borderColor: '#fff',
-                width: 100,
-              }}
-              onPress={() => setShowCamera(true)}>
-              <Text style={{color: 'white', fontWeight: '500'}}>Back</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.buttonContainer}>
-            <View style={styles.buttons}>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: '#fff',
-                  padding: 10,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderRadius: 10,
-                  borderWidth: 2,
-                  borderColor: '#77c3ec',
-                }}
-                onPress={() => setShowCamera(true)}>
-                <Text style={{color: '#77c3ec', fontWeight: '500'}}>
-                  Retake
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: '#77c3ec',
-                  padding: 10,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderRadius: 10,
-                  borderWidth: 2,
-                  borderColor: 'white',
-                }}
-                onPress={() => setShowCamera(true)}>
-                <Text style={{color: 'white', fontWeight: '500'}}>
-                  Use Photo
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </>
-      )}
-      <Modal
-        isVisible={isModalVisible}
-        onSwipeComplete={() => setModalVisible(false)}
-        style={{display: 'flex', justifyContent: 'flex-end', margin: 0}}
-        swipeDirection="left">
-        <View style={{backgroundColor: '#FFFFFF'}}>
-          <TouchableOpacity
-            onPress={() => setModalVisible(false)}
-            style={{
-              width: '100%',
-              flexDirection: 'row',
-              justifyContent: 'flex-end',
-              padding: 10,
-            }}>
-            <Text style={{fontSize: 20, fontWeight: '800'}}>X</Text>
-          </TouchableOpacity>
-          <View
-            style={{
-              alignItems: 'center',
-              paddingHorizontal: 10,
-              paddingTop: 10,
-              paddingBottom: 30,
-            }}>
-            {console.log('ssssssssssssssssssss', selectedData)}
-            <Image
-              source={selectedData?.img}
-              style={{height: 150, width: 150}}
-            />
-            <Text style={{textAlign: 'center', fontSize: 18, paddingTop: 10}}>
-              {selectedData?.name}
-            </Text>
-            <Text style={{fontSize: 16}}>{selectedData?.desc}</Text>
-          </View>
-        </View>
-      </Modal>
-    </View>
+    //       <View style={styles.backButton}>
+    //         <TouchableOpacity
+    //           style={{
+    //             backgroundColor: 'rgba(0,0,0,0.2)',
+    //             padding: 10,
+    //             justifyContent: 'center',
+    //             alignItems: 'center',
+    //             borderRadius: 10,
+    //             borderWidth: 2,
+    //             borderColor: '#fff',
+    //             width: 100,
+    //           }}
+    //           onPress={() => setShowCamera(true)}>
+    //           <Text style={{color: 'white', fontWeight: '500'}}>Back</Text>
+    //         </TouchableOpacity>
+    //       </View>
+    //       <View style={styles.buttonContainer}>
+    //         <View style={styles.buttons}>
+    //           <TouchableOpacity
+    //             style={{
+    //               backgroundColor: '#fff',
+    //               padding: 10,
+    //               justifyContent: 'center',
+    //               alignItems: 'center',
+    //               borderRadius: 10,
+    //               borderWidth: 2,
+    //               borderColor: '#77c3ec',
+    //             }}
+    //             onPress={() => setShowCamera(true)}>
+    //             <Text style={{color: '#77c3ec', fontWeight: '500'}}>
+    //               Retake
+    //             </Text>
+    //           </TouchableOpacity>
+    //           <TouchableOpacity
+    //             style={{
+    //               backgroundColor: '#77c3ec',
+    //               padding: 10,
+    //               justifyContent: 'center',
+    //               alignItems: 'center',
+    //               borderRadius: 10,
+    //               borderWidth: 2,
+    //               borderColor: 'white',
+    //             }}
+    //             onPress={() => setShowCamera(true)}>
+    //             <Text style={{color: 'white', fontWeight: '500'}}>
+    //               Use Photo
+    //             </Text>
+    //           </TouchableOpacity>
+    //         </View>
+    //       </View>
+    //     </>
+    //   )}
+    //   <Modal
+    //     isVisible={isModalVisible}
+    //     onSwipeComplete={() => setModalVisible(false)}
+    //     style={{display: 'flex', justifyContent: 'flex-end', margin: 0}}
+    //     swipeDirection="left">
+    //     <View style={{backgroundColor: '#FFFFFF'}}>
+    //       <TouchableOpacity
+    //         onPress={() => setModalVisible(false)}
+    //         style={{
+    //           width: '100%',
+    //           flexDirection: 'row',
+    //           justifyContent: 'flex-end',
+    //           padding: 10,
+    //         }}>
+    //         <Text style={{fontSize: 20, fontWeight: '800'}}>X</Text>
+    //       </TouchableOpacity>
+    //       <View
+    //         style={{
+    //           alignItems: 'center',
+    //           paddingHorizontal: 10,
+    //           paddingTop: 10,
+    //           paddingBottom: 30,
+    //         }}>
+    //         {console.log('ssssssssssssssssssss', selectedData)}
+    //         <Image
+    //           source={selectedData?.img}
+    //           style={{height: 150, width: 150}}
+    //         />
+    //         <Text style={{textAlign: 'center', fontSize: 18, paddingTop: 10}}>
+    //           {selectedData?.name}
+    //         </Text>
+    //         <Text style={{fontSize: 16}}>{selectedData?.desc}</Text>
+    //       </View>
+    //     </View>
+    //   </Modal>
+    // </View>
   );
 }
 
