@@ -10,6 +10,7 @@ import {
   TextInput,
   Keyboard,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 
 // import slider for the tuning of pitch and speed
@@ -17,27 +18,50 @@ import Slider from '@react-native-community/slider';
 
 // import Tts Text to Speech
 import Tts from 'react-native-tts';
-const TexttoSpeech = () => {
+import Icon from './common/Icon';
+const TexttoSpeech = textToRead => {
+  console.log('textTOrEAD', textToRead?.textToRead);
   const [voices, setVoices] = useState([]);
   const [ttsStatus, setTtsStatus] = useState('initiliazing');
+  console.log('ttsStatussss', ttsStatus);
   const [selectedVoice, setSelectedVoice] = useState(null);
   const [speechRate, setSpeechRate] = useState(0.5);
   const [speechPitch, setSpeechPitch] = useState(1);
-  const [text, setText] = useState('Enter Text like Hello About React');
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [text, setText] = useState(
+    'hello hello hello hellohello hellohello hellohello hello',
+  );
+  console.log('text.length', text.length);
+  const [startText, setStartText] = useState(0);
+  const [endText, setEndText] = useState(0);
+  console.log('startText EndText', startText, endText);
+  useEffect(() => {
+    if (textToRead) {
+      setText(textToRead?.textToRead);
+    }
+  }, [textToRead]);
+  useEffect(() => {
+    // Tts.addEventListener('tts-start', _event => setTtsStatus('started'));
+    // Tts.addEventListener('tts-finish', _event => setTtsStatus('finished'));
+    // Tts.addEventListener('tts-cancel', _event => setTtsStatus('cancelled'));
+    Tts.setDefaultRate(speechRate);
+    Tts.setDefaultPitch(speechPitch);
+    Tts.getInitStatus().then(initTts);
+  }, []);
   useEffect(() => {
     Tts.addEventListener('tts-start', _event => setTtsStatus('started'));
     Tts.addEventListener('tts-finish', _event => setTtsStatus('finished'));
     Tts.addEventListener('tts-cancel', _event => setTtsStatus('cancelled'));
-    Tts.setDefaultRate(speechRate);
-    Tts.setDefaultPitch(speechPitch);
-    Tts.getInitStatus().then(initTts);
-    return () => {
-      Tts.removeEventListener('tts-start', _event => setTtsStatus('started'));
-      Tts.removeEventListener('tts-finish', _event => setTtsStatus('finished'));
-      Tts.removeEventListener('tts-cancel', _event =>
-        setTtsStatus('cancelled'),
-      );
-    };
+    Tts.addEventListener(
+      'tts-progress',
+      event => {
+        event && setStartText(event?.start);
+        event && setEndText(event?.end);
+      },
+      // event && setStartText(event?.end),
+
+      // setEndText(event?.end),
+    );
   }, []);
   const initTts = async () => {
     const voices = await Tts.voices();
@@ -68,16 +92,30 @@ const TexttoSpeech = () => {
     Tts.stop();
     Tts.speak(text);
   };
-
-  const updateSpeechRate = async rate => {
-    await Tts.setDefaultRate(rate);
-    setSpeechRate(rate);
+  const handlePlay = () => {
+    Tts.speak(text);
+    setIsPlaying(true);
   };
 
-  const updateSpeechPitch = async rate => {
-    await Tts.setDefaultPitch(rate);
-    setSpeechPitch(rate);
+  const handlePause = () => {
+    console.log('Pausedddddddddddddd');
+    Tts.pause();
+    Tts.setIsPlaying(false);
   };
+
+  const handleStop = () => {
+    Tts.stop();
+    setIsPlaying(false);
+  };
+  //   const updateSpeechRate = async rate => {
+  //     await Tts.setDefaultRate(rate);
+  //     setSpeechRate(rate);
+  //   };
+
+  //   const updateSpeechPitch = async rate => {
+  //     await Tts.setDefaultPitch(rate);
+  //     setSpeechPitch(rate);
+  //   };
 
   const onVoicePress = async voice => {
     try {
@@ -104,11 +142,10 @@ const TexttoSpeech = () => {
       </TouchableOpacity>
     );
   };
-
+  const [hasBookmarked, setHasBookmarked] = useState(false);
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.container}>
-        <Text style={styles.titleText}>
+    <View style={styles.container}>
+      {/* <Text style={styles.titleText}>
           Text to Speech Conversion with Natural Voices
         </Text>
         <View style={styles.sliderContainer}>
@@ -134,8 +171,8 @@ const TexttoSpeech = () => {
             value={speechPitch}
             onSlidingComplete={updateSpeechPitch}
           />
-        </View>
-        <Text style={styles.sliderContainer}>
+        </View> */}
+      {/* <Text style={styles.sliderContainer}>
           {`Selected Voice: ${selectedVoice || ''}`}
         </Text>
         <TextInput
@@ -143,30 +180,108 @@ const TexttoSpeech = () => {
           onChangeText={text => setText(text)}
           value={text}
           onSubmitEditing={Keyboard.dismiss}
-        />
-        <TouchableOpacity style={styles.buttonStyle} onPress={readText}>
-          <Text style={styles.buttonTextStyle}>
-            Click to Read Text ({`Status: ${ttsStatus || ''}`})
-          </Text>
+        /> */}
+      <View style={styles.leftBar}>
+        <TouchableOpacity onPress={() => setHasBookmarked(!hasBookmarked)}>
+          {!hasBookmarked ? (
+            <Icon type={'fa'} name="bookmark-o" size={30} color={'#1E90FF'} />
+          ) : (
+            <Icon type={'fa'} name="bookmark" size={30} color={'#1E90FF'} />
+          )}
         </TouchableOpacity>
-        <Text style={styles.sliderLabel}>Select the Voice from below</Text>
+      </View>
+      <View
+        style={{
+          // backgroundColor: 'red',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          display: 'flex',
+          flexWrap: 'wrap',
+        }}>
+        <TouchableOpacity
+          onPress={() => {}}
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginHorizontal: 10,
+          }}>
+          <Icon type={'material'} name="replay-10" size={30} color="#808080" />
+        </TouchableOpacity>
+        {/* <View>
+          <Icon type={'materialCommunity'} name="rewind-10" size={25} />
+        </View> */}
+        {console.log('isPlaying', isPlaying)}
+        {!isPlaying ? (
+          <TouchableOpacity onPress={handlePlay}>
+            <Icon
+              type={'fa'}
+              name={'play-circle'}
+              size={65}
+              color={'#1E90FF'}
+            />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={handleStop}>
+            <Icon type="fa" name="stop-circle" size={65} color={'#1E90FF'} />
+          </TouchableOpacity>
+        )}
+        <TouchableOpacity
+          onPress={() => {}}
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginHorizontal: 10,
+          }}>
+          <Icon type={'material'} name="forward-10" size={30} color="#808080" />
+        </TouchableOpacity>
+
+        {/* <View>
+          <Icon type={'materialCommunity'} name="fast-forward-10" size={25} />
+        </View> */}
+        {/* <TouchableOpacity style={styles.buttonStyle} onPress={readText}>
+              {console.log('ttsStatus', ttsStatus)}
+              <Image
+                source={require('../../assets/icons/play.png')}
+                style={{width: 30, height: 30}}
+              />
+            </TouchableOpacity> */}
+      </View>
+      <TouchableOpacity onPress={() => {}} style={styles.rightBar}>
+        {/* <Icon type={'material'} name="forward-10" size={30} color="#808080" />
+         */}
+        <Text style={{fontSize: 18, fontWeight: '600'}}>1x</Text>
+      </TouchableOpacity>
+      {/* <Text style={styles.sliderLabel}>Select the Voice from below</Text>
         <FlatList
           style={{width: '100%', marginTop: 5}}
           keyExtractor={item => item.id}
           renderItem={renderVoiceItem}
           extraData={selectedVoice}
           data={voices}
-        />
-      </View>
-    </SafeAreaView>
+        /> */}
+    </View>
   );
 };
 export default TexttoSpeech;
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    flexDirection: 'column',
-    padding: 5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    display: 'flex',
+    flexWrap: 'wrap',
+    // backgroundColor: 'red',
+  },
+  leftBar: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    // backgroundColor: 'cyan',
+    paddingHorizontal: 20,
+  },
+  rightBar: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    // backgroundColor: 'cyan',
+    paddingHorizontal: 20,
   },
   titleText: {
     fontSize: 22,
@@ -174,9 +289,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   buttonStyle: {
+    borderRadius: 60,
+    padding: 5,
+    display: 'flex',
     justifyContent: 'center',
-    marginTop: 15,
-    padding: 10,
+    alignItems: 'center',
     backgroundColor: '#8ad24e',
   },
   buttonTextStyle: {

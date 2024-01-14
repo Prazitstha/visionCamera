@@ -24,6 +24,7 @@ import {
   useFrameProcessor,
 } from 'react-native-vision-camera';
 import TexttoSpeech from '../components/TexttoSpeech';
+import Icon from '../components/common/Icon';
 const data = {
   bhairab: {
     id: '12345',
@@ -49,7 +50,11 @@ const CameraScreen = () => {
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
-
+  useEffect(() => {
+    setTimeout(() => {
+      setShowCamera(true);
+    }, 200);
+  }, []);
   const frameProcessor = useFrameProcessor(frame => {
     'worklet';
     console.log('hello');
@@ -108,24 +113,25 @@ const CameraScreen = () => {
       </View>
     );
   }
-
+  const [hasBookmarked, setHasBookmarked] = useState(false);
   return (
     <View style={styles.container}>
-      {showCamera ? (
-        <>
-          <Camera
-            ref={camera}
-            style={StyleSheet.absoluteFill}
-            device={device}
-            format={format}
-            isActive={showCamera}
-            photo={true}
-            // frameProcessor={frameProcessor}
-            codeScanner={codeScanner}
-            exposure={0}
-          />
+      {
+        showCamera ? (
+          <>
+            <Camera
+              ref={camera}
+              style={StyleSheet.absoluteFill}
+              device={device}
+              format={format}
+              isActive={showCamera}
+              photo={true}
+              // frameProcessor={frameProcessor}
+              codeScanner={codeScanner}
+              exposure={0}
+            />
 
-          <View style={styles.buttonContainer}>
+            {/* <View style={styles.buttonContainer}>
             <TouchableOpacity
               onPress={() =>
                 cameraType === 'back'
@@ -145,77 +151,90 @@ const CameraScreen = () => {
               style={styles.camButton}
               onPress={() => capturePhoto()}
             />
-          </View>
-        </>
-      ) : (
-        <>
-          {imageSource !== '' ? (
-            <Image
-              style={styles.image}
-              source={{
-                uri: `file://'${imageSource}`,
-              }}
-            />
-          ) : null}
+          </View> */}
+          </>
+        ) : null
+        // <>
+        //   {imageSource !== '' ? (
+        //     <Image
+        //       style={styles.image}
+        //       source={{
+        //         uri: `file://'${imageSource}`,
+        //       }}
+        //     />
+        //   ) : null}
 
-          <View style={styles.backButton}>
-            <TouchableOpacity
-              style={{
-                backgroundColor: 'rgba(0,0,0,0.2)',
-                padding: 10,
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: 10,
-                borderWidth: 2,
-                borderColor: '#fff',
-                width: 100,
-              }}
-              onPress={() => setShowCamera(true)}>
-              <Text style={{color: 'white', fontWeight: '500'}}>Back</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.buttonContainer}>
-            <View style={styles.buttons}>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: '#fff',
-                  padding: 10,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderRadius: 10,
-                  borderWidth: 2,
-                  borderColor: '#77c3ec',
-                }}
-                onPress={() => setShowCamera(true)}>
-                <Text style={{color: '#77c3ec', fontWeight: '500'}}>
-                  Retake
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: '#77c3ec',
-                  padding: 10,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderRadius: 10,
-                  borderWidth: 2,
-                  borderColor: 'white',
-                }}
-                onPress={() => setShowCamera(true)}>
-                <Text style={{color: 'white', fontWeight: '500'}}>
-                  Use Photo
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </>
-      )}
+        //   <View style={styles.backButton}>
+        //     <TouchableOpacity
+        //       style={{
+        //         backgroundColor: 'rgba(0,0,0,0.2)',
+        //         padding: 10,
+        //         justifyContent: 'center',
+        //         alignItems: 'center',
+        //         borderRadius: 10,
+        //         borderWidth: 2,
+        //         borderColor: '#fff',
+        //         width: 100,
+        //       }}
+        //       onPress={() => setShowCamera(true)}>
+        //       <Text style={{color: 'white', fontWeight: '500'}}>Back</Text>
+        //     </TouchableOpacity>
+        //   </View>
+        //   <View style={styles.buttonContainer}>
+        //     <View style={styles.buttons}>
+        //       <TouchableOpacity
+        //         style={{
+        //           backgroundColor: '#fff',
+        //           padding: 10,
+        //           justifyContent: 'center',
+        //           alignItems: 'center',
+        //           borderRadius: 10,
+        //           borderWidth: 2,
+        //           borderColor: '#77c3ec',
+        //         }}
+        //         onPress={() => setShowCamera(true)}>
+        //         <Text style={{color: '#77c3ec', fontWeight: '500'}}>
+        //           Retake
+        //         </Text>
+        //       </TouchableOpacity>
+        //       <TouchableOpacity
+        //         style={{
+        //           backgroundColor: '#77c3ec',
+        //           padding: 10,
+        //           justifyContent: 'center',
+        //           alignItems: 'center',
+        //           borderRadius: 10,
+        //           borderWidth: 2,
+        //           borderColor: 'white',
+        //         }}
+        //         onPress={() => setShowCamera(true)}>
+        //         <Text style={{color: 'white', fontWeight: '500'}}>
+        //           Use Photo
+        //         </Text>
+        //       </TouchableOpacity>
+        //     </View>
+        //   </View>
+        // </>
+      }
       <Modal
         isVisible={isModalVisible}
         onSwipeComplete={() => setModalVisible(false)}
-        style={{display: 'flex', justifyContent: 'flex-end', margin: 0}}
+        style={{
+          display: 'flex',
+          flex: 1,
+          justifyContent: 'flex-end',
+          margin: 0,
+          padding: 0,
+        }}
         swipeDirection="left">
-        <View style={{backgroundColor: '#FFFFFF'}}>
+        <View
+          style={{
+            // flex:1,
+            // maxHeight: '70%',
+            backgroundColor: '#FFFFFF',
+            borderTopLeftRadius: 10,
+            borderTopRightRadius: 10,
+          }}>
           <TouchableOpacity
             onPress={() => setModalVisible(false)}
             style={{
@@ -224,26 +243,39 @@ const CameraScreen = () => {
               justifyContent: 'flex-end',
               padding: 10,
             }}>
-            <Text style={{fontSize: 20, fontWeight: '800'}}>X</Text>
+            <Icon type={'ant'} name="close" size={22} color="#4d4d4d" />
+            {/* <Text style={{fontSize: 20, fontWeight: '800'}}>X</Text> */}
           </TouchableOpacity>
-          <View
-            style={{
-              alignItems: 'center',
-              paddingHorizontal: 10,
-              paddingTop: 10,
-              paddingBottom: 30,
-            }}>
-            {console.log('ssssssssssssssssssss', selectedData)}
-            <Image
-              source={selectedData?.img}
-              style={{height: 150, width: 150}}
-            />
-            <Text style={{textAlign: 'center', fontSize: 18, paddingTop: 10}}>
-              {selectedData?.name}
-            </Text>
-            <Text style={{fontSize: 16}}>{selectedData?.desc}</Text>
+          <ScrollView>
+            <View
+              style={{
+                alignItems: 'center',
+                paddingHorizontal: 10,
+                paddingTop: 10,
+                paddingBottom: 30,
+              }}>
+              <Image
+                source={selectedData?.img}
+                style={{
+                  height: 200,
+                  width: '100%',
+                  resizeMode: 'contain',
+                  borderRadius: 5,
+                }}
+              />
+              <View style={{marginTop: 10}}>
+                <Text style={{fontSize: 16}}>{selectedData?.desc}</Text>
+                {/* <Text style={{fontSize: 16}}>{selectedData?.desc}</Text>
+                <Text style={{fontSize: 16}}>{selectedData?.desc}</Text>
+                <Text style={{fontSize: 16}}>{selectedData?.desc}</Text> */}
+              </View>
+            </View>
+          </ScrollView>
+          <View style={styles.bottomBar}>
+            <View style={styles.centerBar}>
+              <TexttoSpeech textToRead={selectedData?.desc} />
+            </View>
           </View>
-          {/* <TexttoSpeech /> */}
         </View>
       </Modal>
     </View>
@@ -251,6 +283,24 @@ const CameraScreen = () => {
 };
 export default CameraScreen;
 const styles = StyleSheet.create({
+  leftBar: {
+    width: '20%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  bottomBar: {
+    flexDirection: 'row',
+    borderTopWidth: 0.5,
+    borderTopColor: '#ccc',
+    // backgroundColor: 'red',
+    // elevation: 1,
+    // paddingHorizontal: 10,
+    paddingVertical: 10,
+  },
+  centerBar: {
+    width: '100%',
+    // backgroundColor: 'cyan',
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
