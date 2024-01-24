@@ -1,6 +1,8 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import CameraScreen from '../screen/Camera-screen';
 import {createRef} from 'react';
+import Icon from '../components/common/Icon';
+import BookmarkNavigator from './BookmarkNavigator';
 const Tab = createBottomTabNavigator();
 export const navigationRef = createRef();
 export default function TabNavigator() {
@@ -8,11 +10,19 @@ export default function TabNavigator() {
     <Tab.Navigator
       screenOptions={({route}) => ({
         headerShown: false,
-        tabBarInactiveTintColor: '#000000',
-        tabBarActiveTintColor: 'red',
+        tabBarInactiveTintColor: '#808080',
+        tabBarActiveTintColor: '#1E90FF',
+        tabBarStyle: {
+          paddingTop: 5,
+          // height: 50,
+          // flexDirection: 'column',
+          // justifyContent: 'center',
+          // alignItems: 'center',
+        },
         tabBarLabelStyle: {
           // fontFamily: 'Inter-Medium',
-          fontSize: 10,
+          fontSize: 12,
+          fontWeight: '800',
           marginBottom: 2,
         },
       })}>
@@ -20,54 +30,44 @@ export default function TabNavigator() {
         name={'Home'}
         component={CameraScreen}
         options={{
-          tabBarLabel: 'Home',
-          title: 'Add Friday Class Report',
+          tabBarLabel: 'Scan QR',
+          title: 'Scan QR',
           headerShown: false,
-          //   tabBarIcon: ({focused}) => {
-          //     return focused ? (
-          //       <Icon
-          //         type="fa"
-          //         name="file-text"
-          //         size={23}
-          //         color={Colors.primary_color}
-          //       />
-          //     ) : (
-          //       <Icon
-          //         type="fa"
-          //         name="file-text-o"
-          //         size={23}
-          //         color={Colors.gray}
-          //       />
-          //     );
-          //   },
+          tabBarIcon: ({focused}) => {
+            return focused ? (
+              <Icon
+                type="materialCommunity"
+                name="qrcode-scan"
+                size={23}
+                color={'#1E90FF'}
+              />
+            ) : (
+              <Icon
+                type="materialCommunity"
+                name="qrcode-scan"
+                size={23}
+                color={'#808080'}
+              />
+            );
+          },
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name={'Bookmarks'}
-        component={CameraScreen}
+        component={BookmarkNavigator}
         options={{
           tabBarLabel: 'Bookmarks',
-          title: 'Add Friday Class Report',
+          title: 'Bookmarks',
           headerShown: false,
-          //   tabBarIcon: ({focused}) => {
-          //     return focused ? (
-          //       <Icon
-          //         type="fa"
-          //         name="file-text"
-          //         size={23}
-          //         color={Colors.primary_color}
-          //       />
-          //     ) : (
-          //       <Icon
-          //         type="fa"
-          //         name="file-text-o"
-          //         size={23}
-          //         color={Colors.gray}
-          //       />
-          //     );
-          //   },
+          tabBarIcon: ({focused}) => {
+            return focused ? (
+              <Icon type="fa" name="bookmark" size={23} color={'#1E90FF'} />
+            ) : (
+              <Icon type="fa" name="bookmark-o" size={23} color={'#808080'} />
+            );
+          },
         }}
-      />
+      /> */}
 
       {/* <Tab.Screen
             name="FridayAttendance"

@@ -14,7 +14,6 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
-  Text,
   TouchableOpacity,
   useColorScheme,
   View,
@@ -38,6 +37,8 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import * as eva from '@eva-design/eva';
+import {ApplicationProvider, Layout, Text} from '@ui-kitten/components';
 import NavigationContainerComp from './src/navigation/navigationContainer';
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -159,7 +160,9 @@ function App(): JSX.Element {
   }
 
   return (
-    <NavigationContainerComp />
+    <ApplicationProvider {...eva} theme={eva.light}>
+      <NavigationContainerComp />
+    </ApplicationProvider>
     // <View style={styles.container}>
     //   {showCamera ? (
     //     <>
