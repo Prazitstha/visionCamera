@@ -27,11 +27,6 @@ import Slider from '@react-native-community/slider';
 import Tts from 'react-native-tts';
 import Icon from './common/Icon';
 import {ProgressBar} from '@ui-kitten/components';
-import Animated, {
-  useSharedValue,
-  withSpring,
-  useAnimatedStyle,
-} from 'react-native-reanimated';
 const placements = [
   'top',
   'top start',

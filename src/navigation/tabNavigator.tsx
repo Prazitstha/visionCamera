@@ -2,7 +2,8 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import CameraScreen from '../screen/Camera-screen';
 import {createRef} from 'react';
 import Icon from '../components/common/Icon';
-import BookmarkNavigator from './BookmarkNavigator';
+import BookmarkNavigator from './CameraScreenNav';
+import CameraScreenNav from './CameraScreenNav';
 const Tab = createBottomTabNavigator();
 export const navigationRef = createRef();
 export default function TabNavigator() {
