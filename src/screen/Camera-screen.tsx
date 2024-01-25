@@ -1,5 +1,6 @@
 import Modal from 'react-native-modal';
 import {
+  Alert,
   Image,
   Platform,
   SafeAreaView,
@@ -13,46 +14,45 @@ import {
 import TrackPlayer, {useProgress} from 'react-native-track-player';
 import React, {useEffect, useRef, useState} from 'react';
 import {ActivityIndicator, Linking} from 'react-native';
-import {
-  Camera,
-  Templates,
-  useCameraDevice,
-  // useCameraDevice,
-  useCameraDevices,
-  useCameraFormat,
-  useCodeScanner,
-  useFrameProcessor,
-} from 'react-native-vision-camera';
+// import {
+//   Camera,
+//   Templates,
+//   useCameraDevice,
+//   // useCameraDevice,
+//   useCameraDevices,
+//   useCameraFormat,
+//   useCodeScanner,
+//   useFrameProcessor,
+// } from 'react-native-vision-camera';
 import TexttoSpeech from '../components/TexttoSpeech';
 import Icon from '../components/common/Icon';
 import Swiper from 'react-native-swiper';
 import {Text} from '@ui-kitten/components';
 import {useNavigation} from '@react-navigation/native';
+import {Camera, CameraType} from 'react-native-camera-kit';
 const data = {
   sample1: {
     id: '12345',
     name: 'Shakya Muni Buddha',
-    desc: 'Bhairava originates from the word bhīru, which means "fearsome". Bhairava means "terribly fearsome form". It is also known as one who destroys fear or one who is beyond fear. One interpretation is that he protects his devotees from dreadful enemies, greed, lust, and anger. These enemies are dangerous as they never allow humans to seek God within. There is also another interpretation: Bha means creation, ra means sustenance and va means destruction. Therefore, Bhairava is the one who creates, sustains and dissolves the three stages of life. Therefore, he becomes the ultimate or the supreme.',
-    img: require('../../assets/bhairav.jpg'),
+    desc: 'In the main courtyard, there is this three storeyed building which is covered with golden metal sheets facing East (call it West wing). One can see multiple roofing at different storeys of the building with several statues studed in walls and windows along with various other carvings. This wing has a raised platform with a narrow corridor at basement covered with golden metal sheets. A centrally placed and highly decorated silver door here opens to a room called Ganda-kuti where the main statue, Buddha Sakyamuni is enshrined. A silver torana is placed over this door wherein Panch Buddhas are engraved very distinctly.',
+    img: require('../../assets/images/shakyamunibuddha1.jpg'),
   },
   sample2: {
     id: '22212',
     name: 'Green tara',
-    desc: 'Hanuman (/ˈhʌnʊˌmɑːn/; Sanskrit: हनुमान्, IAST: Hanumān),[5] also known as Maruti, Bajrangabali, and Anjaneya,[6] is a deity in Hinduism, revered as a divine vanara and a devoted companion of the deity Rama. Central to the Ramayana, Hanuman is celebrated for his unwavering devotion to Rama and is considered a chiranjivi. He is traditionally believed to be the spiritual offspring of the wind deity Vayu, who is said to have played a significant role in his birth.[7][8] His tales are recounted not only in the Ramayana but also in the Mahabharata and various Puranas.',
-    img: require('../../assets/hanuman.jpg'),
+    desc: 'sample 2',
+    img: require('../../assets/images/greentara.jpg'),
   },
   sample3: {
     id: '22212',
     name: 'Amitabha Buddha',
-    desc: 'Hanuman (/ˈhʌnʊˌmɑːn/; Sanskrit: हनुमान्, IAST: Hanumān),[5] also known as Maruti, Bajrangabali, and Anjaneya,[6] is a deity in Hinduism, revered as a divine vanara and a devoted companion of the deity Rama. Central to the Ramayana, Hanuman is celebrated for his unwavering devotion to Rama and is considered a chiranjivi. He is traditionally believed to be the spiritual offspring of the wind deity Vayu, who is said to have played a significant role in his birth.[7][8] His tales are recounted not only in the Ramayana but also in the Mahabharata and various Puranas.',
-    img: require('../../assets/hanuman.jpg'),
+    desc: 'In the main courtyard, there is this three storeyed building which is covered with golden metal sheets facing East (call it West wing). One can see multiple roofing at different storeys of the building with several statues studed in walls and windows along with various other carvings. This wing has a raised platform with a narrow corridor at basement covered with golden metal sheets. A centrally placed and highly decorated silver door here opens to a room called Ganda-kuti where the main statue, Buddha Sakyamuni is enshrined. A silver torana is placed over this door wherein Panch Buddhas are engraved very distinctly.',
+    img: require('../../assets/images/amitabh.jpg'),
   },
 };
 const CameraScreen = ({navigation}) => {
-  const camera = useRef(null);
-
   const [hasPermission, setHasPermission] = useState(false);
-  const [showCamera, setShowCamera] = useState(false);
+  const [showCamera, setShowCamera] = useState(true);
   console.log('showCamera', showCamera);
   const [imageSource, setImageSource] = useState('');
   const [isModalVisible, setModalVisible] = useState(false);
@@ -61,112 +61,212 @@ const CameraScreen = ({navigation}) => {
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
-  useEffect(() => {
-    setTimeout(() => {
-      setShowCamera(true);
-    }, 200);
-  }, []);
-  const codeScanner = useCodeScanner({
-    codeTypes: ['qr', 'ean-13'],
-    onCodeScanned: codes => {
-      let value = codes[0]?.value;
-      console.log('value', value);
-      if (value && data[value]) {
-        // Navigate to 'detail-screen' and pass the matched object
-        navigation.navigate('detail-screen', {selectedData: data[value]});
-      }
-      // if (value) {
-      //   // Iterate over the keys in the data object
-      //   for (const key in data) {
-      //     if (data.hasOwnProperty(key)) {
-      //       console.log('111111111111111111111111111');
-      //       // Check if the value matches the name
-      //       if (value === data[key]?.name.toLowerCase()) {
-      //         console.log('22222222222222222222222');
-
-      //         // Use the useNavigation hook to get the navigation object
-      //         // const navigation = useNavigation();
-
-      //         // Navigate to 'detail-screen' and pass the matched object
-      //         navigation.navigate('detail-screen', {object: data[key]});
-      //         return; // Stop further iteration since we found a match
-      //       }
-      //     }
-      //   }
-      // }
-    },
-  });
-  const codeScannesr = useCodeScanner({
-    codeTypes: ['qr', 'ean-13'],
-    onCodeScanned: codes => {
-      let value = codes[0]?.value;
-      console.log('value', value);
-      if (value) {
-      }
-      // if (value === 'sample1') {
-      //   setSelectedData(data.shakyamunibuddha);
-      //   setModalVisible(true);
-      //   navigation.navigate('detail-screen', {
-      //     selectedData: data.shakyamunibuddha,
-      //   });
-      // } else if (value === 'sample2') {
-      //   setSelectedData(data.greentara);
-      //   setModalVisible(true);
-      // } else if (value === 'sample3') {
-      //   setSelectedData(data.amitabhabuddha);
-      //   setModalVisible(true);
-      // }
-    },
-  });
-
-  const capturePhoto = async () => {
-    if (camera.current !== null) {
-      const photo = await camera.current.takePhoto({});
-      // setImageSource(photo.path);
-      // setShowCamera(false);
-      console.log(photo.path);
+  const handleQrevent = event => {
+    const scannedData = event?.nativeEvent?.codeStringValue;
+    if (scannedData && data[scannedData]) {
+      setSelectedData(data[[scannedData]]);
+      setModalVisible(true);
+      // Navigate to 'detail-screen' and pass the matched object
+      // navigation.navigate('detail-screen', {selectedData: data[scannedData]});
     }
   };
-  const [cameraType, setCameraType] = useState('back');
-  const device = useCameraDevice(cameraType);
-  const format = useCameraFormat(device, [
-    {videoResolution: {width: 3048, height: 2160}},
-    {fps: 60},
-  ]);
-  // const device = devices.back;
-
-  // if (!hasPermission) {
-  //   return (
-  //     <View>
-  //       <Text>No permission</Text>
-  //     </View>
-  //   );
-  // }
-  if (device == null) {
-    return (
-      <View style={{flex: 1}}>
-        <ActivityIndicator color="red" />
-      </View>
-    );
-  }
-  const [hasBookmarked, setHasBookmarked] = useState(false);
   const handleToggleCamera = () => {
     setShowCamera(!showCamera);
   };
   return (
-    <View style={styles.container}>
-      <Camera
-        ref={camera}
-        style={StyleSheet.absoluteFill}
-        device={device}
-        format={format}
-        isActive={showCamera}
-        photo={true}
-        // frameProcessor={frameProcessor}
-        codeScanner={codeScanner}
-        exposure={0}
-      />
-    </View>
+    // <View style={styles.container}>
+    <>
+      {showCamera && (
+        <Camera
+          style={{flex: 1}}
+          scanBarcode={true}
+          onReadCode={event => handleQrevent(event)} // optional
+          showFrame={true} // (default false) optional, show frame with transparent layer (qr code or barcode will be read on this area ONLY), start animation for scanner, that stops when a code has been found. Frame always at center of the screen
+          laserColor="white" // (default red) optional, color of laser in scanner frame
+          frameColor="white" // (default white) optional, color of border of scanner frame
+        />
+      )}
+      <Modal
+        isVisible={isModalVisible}
+        animationIn="slideInUp"
+        animationOut={'slideOutDown'}
+        animationInTiming={600}
+        animationOutTiming={600}
+        coverScreen={true}
+        onModalShow={handleToggleCamera}
+        // onSwipeComplete={() => setModalVisible(false)}
+        style={{
+          display: 'flex',
+          flex: 1,
+          justifyContent: 'flex-end',
+          margin: 0,
+          padding: 0,
+        }}
+        // swipeDirection="left"
+      >
+        <View
+          style={{
+            flex: 1,
+            // maxHeight: '70%',
+            backgroundColor: '#fed38a',
+            borderTopLeftRadius: 10,
+            borderTopRightRadius: 10,
+            overflow: 'hidden',
+          }}>
+          <View
+            style={{
+              backgroundColor: '#ffffff',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <View style={{}}>
+              <Image
+                source={require('../../assets/icons/Logo.png')}
+                style={{height: 60, width: 60, resizeMode: 'contain'}}
+              />
+            </View>
+            <View style={{justifyContent: 'center'}}>
+              <Text category="h5">Golden Temple 金廟</Text>
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                handleToggleCamera(), setModalVisible(false);
+              }}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: 10,
+              }}>
+              <Icon type={'ant'} name="close" size={22} color="#4d4d4d" />
+              {/* <Text style={{fontSize: 20, fontWeight: '800'}}>X</Text> */}
+            </TouchableOpacity>
+          </View>
+          <ScrollView>
+            <View
+              style={{
+                alignItems: 'center',
+                // paddingHorizontal: 10,
+                // paddingTop: 10,
+                paddingBottom: 30,
+              }}>
+              {/* <Swiper
+                style={{position: 'relative'}}
+                showsButtons={false}
+                height={200}
+                // height={swiperHeight}
+                showsPagination={true}
+                autoplay={true}
+                autoplayTimeout={4}
+                paginationStyle={{
+                  bottom: -20,
+                  // backgroundColor: '#00000050',
+                  paddingVertical: 5,
+                  // right: 0,
+                  // backgroundColor: 'blue',
+                  // width: 50,
+                  // justifyContent: 'flex-end',
+                  // paddingRight: 30,
+                }}
+                loop={true}
+                // height={190}
+                // animated={true}
+                bounces={true}
+                removeClippedSubviews={false}
+                activeDot={
+                  <View
+                    style={{
+                      backgroundColor: '#1E90FF',
+                      width: 16,
+                      height: 6,
+                      borderRadius: 4,
+                      marginLeft: 3,
+                      marginRight: 3,
+                      marginTop: 3,
+                      marginBottom: 3,
+                    }}
+                  />
+                }
+                dot={
+                  <View
+                    style={{
+                      backgroundColor: '#ccc',
+                      width: 6,
+                      height: 6,
+                      borderRadius: 4,
+                      marginLeft: 3,
+                      marginRight: 3,
+                      marginTop: 3,
+                      marginBottom: 3,
+                    }}
+                  />
+                }>
+                <View style={{paddingHorizontal: 0}}>
+                  <Image
+                    source={require('../../assets/images/threebuddha.jpg')}
+                    style={{
+                      height: 200,
+                      width: '100%',
+                      resizeMode: 'contain',
+                      borderRadius: 1,
+                    }}
+                  />
+                </View>
+                <View style={{paddingHorizontal: 0}}>
+                  <Image
+                    source={require('../../assets/images/shakyamunibuddha.jpg')}
+                    style={{
+                      height: 200,
+                      width: '100%',
+                      resizeMode: 'contain',
+                      borderRadius: 1,
+                    }}
+                  />
+                </View>
+                <View style={{paddingHorizontal: 0}}>
+                  <Image
+                    source={require('../../assets/images/threebuddha.jpg')}
+                    style={{
+                      height: 200,
+                      width: '100%',
+                      resizeMode: 'contain',
+                      borderRadius: 1,
+                    }}
+                  />
+                </View>
+              </Swiper> */}
+              <View style={{width: '100%', maxHeight: 260}}>
+                <Image
+                  source={selectedData?.img}
+                  style={{
+                    width: '100%', // Set width to 100% of the parent container
+                    height: '100%', // Set height to 100% of the parent container
+                    resizeMode: 'contain', // or 'contain' based on your preference
+                  }}
+                />
+              </View>
+
+              <View style={{marginTop: 20, paddingHorizontal: 10}}>
+                <Text style={{fontSize: 20, fontWeight: '600'}}>
+                  {selectedData?.desc}
+                </Text>
+                {/* <Text style={{fontSize: 16}}>{selectedData?.desc}</Text>
+                <Text style={{fontSize: 16}}>{selectedData?.desc}</Text>
+                <Text style={{fontSize: 16}}>{selectedData?.desc}</Text> */}
+              </View>
+            </View>
+          </ScrollView>
+          <View style={styles.bottomBar}>
+            {/* <View style={styles.centerBar}> */}
+            <TexttoSpeech
+              textToRead={selectedData?.desc}
+              handleToggleCamera={handleToggleCamera}
+            />
+            {/* </View> */}
+          </View>
+        </View>
+      </Modal>
+    </>
   );
 };
 export default CameraScreen;

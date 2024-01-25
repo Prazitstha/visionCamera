@@ -93,9 +93,6 @@ const TexttoSpeech = (textToRead, {handleToggleCamera}) => {
     }
   }, [textToRead]);
   useEffect(() => {
-    // Tts.addEventListener('tts-start', _event => setTtsStatus('started'));
-    // Tts.addEventListener('tts-finish', _event => setTtsStatus('finished'));
-    // Tts.addEventListener('tts-cancel', _event => setTtsStatus('cancelled'));
     Tts.setDefaultRate(speechRate);
     Tts.setDefaultPitch(speechPitch);
     Tts.getInitStatus().then(initTts);
